@@ -26,6 +26,6 @@ In the `local-polynomial-fitting` directory there are two scripts: `fit_poly_rec
  `python delay_estimation.py /coeff_from_left_file /coeff_from_right_file `
  
  ## Full algorithm
- The whole algorithm can be executed end-to-end by running the script `master_script.py`. The algorithm starts by generating the LCRs from the raw audio signals, then, locally fitting the 3rd degree polynomials to the LCRs and finally estimating the delays and saving them in a csv file.
+ The whole algorithm can be executed end-to-end by running the script `master_script.py`. The algorithm starts by generating the LCRs from the raw audio signals, then, locally fitting the 3rd degree polynomials to the LCRs and finally estimating the delays and saving them in a csv file. The script `master_script.py` can be used as a good reference to the syntax used to call each part of the algorithm separately.
  
  
