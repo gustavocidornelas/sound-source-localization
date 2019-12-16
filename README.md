@@ -10,3 +10,16 @@ Most of the parameters of the fit, such as the onset model, the window model, th
 `python main.py 80 0.99 0.987 /audio_data_directory`
  
  where `/audio_data_directory` is the full path to the directory containing the audio files.
+
+## Local polynomial fitting
+In the `local-polynomial-fitting` directory there are two scripts: `fit_poly_rect.py` and `fit_poly_exp.py`. The `fit_poly_rect.py` locally fits a 3rd degree polynomial to the LCRs obtained in the previous step using a rectangular window. The lenght of the rectangular window used is defined inside `fit_poly_rect.py`. After running `fit_poly_rect.py`, the local polynomial fit coefficients are saved, already in the canonical basis. The LCR used for the fit (i.e., the right or the left LCR) is chosen via one of the parameters passed when executing the script. To run such script, one should use the following command in the terminal: 
+
+`python fit_poly_rect.py /LCR_data_directory index`
+  
+ where `/LCR_data_directory` is the full path to the directory containing the LCR files and `index` assumes values of 1 (for the LCR from the left) or 2 (for the LCR from the right).
+ 
+ The script `fit_poly_exp.py` performs the fit using an exponential window. This script was used for experimentation purposes only, and does not save the polynomial fit results in the end. The message passing algorithm used in it, though, can be useful for reference.
+ 
+ ## Delay estimation
+ The only script present in the `delay-estimation` directory is `delay_estimation.py`. This script performs the delay estimation given the local polynomial fits for the LCRs from the left and from the right. It saves, then, a csv file containing all the unique delay estimated. The script receives the path to each polynomial coefficients file, when called as in: 
+ `python delay_estimation.py /coeff_from_left_file /coeff_from_right_file `
