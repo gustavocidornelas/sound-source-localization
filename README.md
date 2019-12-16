@@ -21,5 +21,11 @@ In the `local-polynomial-fitting` directory there are two scripts: `fit_poly_rec
  The script `fit_poly_exp.py` performs the fit using an exponential window. This script was used for experimentation purposes only, and does not save the polynomial fit results in the end. The message passing algorithm used in it, though, can be useful for reference.
  
  ## Delay estimation
- The only script present in the `delay-estimation` directory is `delay_estimation.py`. This script performs the delay estimation given the local polynomial fits for the LCRs from the left and from the right. It saves, then, a csv file containing all the unique delay estimated. The script receives the path to each polynomial coefficients file, when called as in: 
+ The only script present in the `delay-estimation` directory is `delay_estimation.py`. This script performs the delay estimation given the local polynomial fits for the LCRs from the left and from the right. The threshold parameters used for determining if the LCRs are rising are defined inside the script. It saves, then, a csv file containing all the unique delay estimated. The script receives the path to each polynomial coefficients file, when called as in: 
+ 
  `python delay_estimation.py /coeff_from_left_file /coeff_from_right_file `
+ 
+ ## Full algorithm
+ The whole algorithm can be executed end-to-end by running the script `master_script.py`. The algorithm starts by generating the LCRs from the raw audio signals, then, locally fitting the 3rd degree polynomials to the LCRs and finally estimating the delays and saving them in a csv file.
+ 
+ 
