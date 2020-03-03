@@ -1,18 +1,4 @@
 """
-Script that estimates the delay between two sound signals based on the local polynomial approximation of their
-corresponding LCRs. The script reads the arguments from the command line and saves a csv file with the unique delays.
-
-Usage:
-----------
->> python delay_estimation.py --coeff_left_file --coeff_right_file --azimuth
-
-coeff_left_file (string): string with the full path to the csv file containing the polynomial coefficients for the left
-                          LCR
-coeff_right_file (string): string with the full path to the csv file containing the polynomial coefficients for the
-                           right LCR
-azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
-                  the correct name)
-
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, November 2019
 
@@ -23,11 +9,24 @@ from matplotlib import rc
 
 
 class DelayEstimationFilterBank:
+    """
+    Class that contains the method to perform the delay estimation in the case where a filter bank is being used.
+
+    Parameters:
+    ----------
+    frequencies (list): frequencies of the onset models used to generate the LCRs that will be fit with the polynomial
+    azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
+                  the correct name)
+    """
     def __init__(self, frequencies, azimuth):
         self.frequencies = frequencies
         self.azimuth = azimuth
 
     def estimate_delay(self):
+        """
+        Method that  estimates the delay between two sound signals based on the local polynomial approximation of their
+        corresponding LCRs. The method uses the class attributes and saves a csv file with the unique delays.
+        """
         azimuth = self.azimuth
         frequencies = self.frequencies
 
@@ -38,20 +37,15 @@ class DelayEstimationFilterBank:
         coeff_right = []
         for i, freq in enumerate(frequencies):
             print(freq)
-            coeff_left.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_left_Az_ ' + str(azimuth) + '_freq_' + str(freq) + '.csv',
+            coeff_left.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_left_Az_ ' +
+                                            str(azimuth) + '_freq_' + str(freq) + '.csv',
                                             delimiter=',', skip_header=False))
-            coeff_right.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_right_Az_' + str(azimuth) + '_freq_' + str(freq) + '.csv',
+            coeff_right.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_right_Az_' +
+                                             str(azimuth) + '_freq_' + str(freq) + '.csv',
                                              delimiter=',', skip_header=False))
         # stacking coefficients from different frequencies in the third dimension
         coeff_left = np.stack(coeff_left, axis=2)
         coeff_right = np.stack(coeff_right, axis=2)
-
-        print(coeff_left.shape)
-        print(coeff_right.shape)
-
-        # testing: ignoring the first 30k samples due to window effect
-        # coeff_left = coeff_left[30000:, :]
-        # coeff_right = coeff_right[30000:, :]
 
         # some useful computations and parameters
         # window size for the 2nd degree polynomial approximation
