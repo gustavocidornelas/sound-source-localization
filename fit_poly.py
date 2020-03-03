@@ -1,32 +1,40 @@
 """
-Script that locally fits the a polynomial of degree 3 to the LCR using a rectangular window. The script reads the
-arguments from the command line and saves a csv file with the corresponding coefficients of the polynomial fit.
-
-Usage:
-----------
->> python fit_poly.py --LCR_file --index --azimuth
-
-LCR_file (string): string with the full path to the csv file containing the LCRs
-index (int): int that represents the column from the LCR file that is used to fit the polynomial, i.e., selects
-                if the polynomial is fit to the LCR from the right or from the left. index = 1, selects the LCR from
-                the left. index = 2, selects the LCR from the right
-azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
-                  the correct name)
-
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, November 2019
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 class FitPoly:
+    """
+    Class that contains the method to perform the polynomial fit to the LCR.
+
+    Parameters:
+    ----------
+    frequencies (list): frequencies of the onset models used to generate the LCRs that will be fit with the polynomial
+    LCR_file (string): string with the full path to the csv file containing the LCRs
+    azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
+                  the correct name)
+    """
     def __init__(self, frequencies, LCR_file, azimuth):
         self.frequencies = frequencies
         self.LCR_file = LCR_file
         self.azimuth = azimuth
 
     def fit_polynomial(self, index):
+        """
+        Method that locally fits the a polynomial of degree 3 to the LCR using a rectangular window. The method uses the
+        class attributes and the index parameter and then saves a csv file with the corresponding coefficients of the
+        polynomial fit.
+
+        Parameter:
+        ----------
+        index (int): int that represents the column from the LCR file that is used to fit the polynomial, i.e., selects
+                if the polynomial is fit to the LCR from the right or from the left. index = 1, selects the LCR from
+                the left. index = 2, selects the LCR from the right
+        """
         # reading the parameters
         frequencies = self.frequencies
         LCR_file = self.LCR_file
