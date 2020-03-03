@@ -1,22 +1,8 @@
 """
-Main script that fits the specified onset model to the audio data. The script reads the arguments from the command line
-and saves a csv file with the LCRs for both channels.
-
-Usage:
-----------
->> python compute_LCR.py --frequencies --onset_decays --window_decay --audio_file --azimuth
-
-frequencies (list): list with the frequencies (float) used. If a single frequency is used, then it should be a list with a single
-          element
-onset_decays (list): list with the onset decays used (float) used. It must match the length of f.
-window_decay (float): float that represents the window decay
-audio_file (string): string with the full path to the csv file containing the audio signals
-azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
-                  the correct name)
-
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, September 2019
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -25,6 +11,23 @@ from window_models import *
 
 
 class ComputeLCR:
+    """
+    Class that contains the method fits the specified onset model to the audio data.
+
+    Parameters:
+    ----------
+    frequencies (list): list with the frequencies (float) used. If a single frequency is used, then it should be a list
+                    with a single element
+    n_freq (int): number of frequencies being used in the model (i.e., for the linear combination scenario). If fitting
+                one onset model at a time, n_freq should be equal to one
+    onset_decays (list): list with the onset decays used (float) used. It must match the length of f and n_freq
+    window_decay (float): float that represents the window decay
+    audio_file (string): string with the full path to the csv file containing the audio signals
+    azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
+                  the correct name)
+    onset_model (string): onset model used. Can be either 'decaying_sinusoid' or 'gammatone'
+    window_model (string): window model used. Can be either 'exponential' or 'gamma'
+    """
     def __init__(self, onset_model, window_model, frequencies, n_freq, onset_decays, window_decay, audio_file, azimuth):
         self.frequencies = frequencies
         self.n_freq = n_freq
@@ -36,6 +39,10 @@ class ComputeLCR:
         self.window_model = window_model
 
     def compute_lcr(self):
+        """
+        Method that fits the onset model to the audio signal. It uses the class attributes and saves a csv file with the
+        LCRs for both channels (left and right).
+        """
         # reading the parameters
         f = self.frequencies
         n_freq = self.n_freq

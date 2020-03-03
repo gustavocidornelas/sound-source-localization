@@ -3,6 +3,7 @@
 Author: Gustavo Cid Ornelas, ETH Zurich, November 2019
 
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
