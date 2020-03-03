@@ -1,27 +1,27 @@
 """
-Script that estimates the delay between two sound signals based on the local polynomial approximation of their
-corresponding LCRs. The script reads the arguments from the command line and saves a csv file with the unique delays.
-
-Usage:
-----------
->> python delay_estimation.py --coeff_left_file --coeff_right_file --azimuth
-
-coeff_left_file (string): string with the full path to the csv file containing the polynomial coefficients for the left
-                          LCR
-coeff_right_file (string): string with the full path to the csv file containing the polynomial coefficients for the
-                           right LCR
-azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
-                  the correct name)
-
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, November 2019
-
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
+
 class DelayEstimation:
+    """
+    Class that contains the methods used to perform the delay estimation (not in the filter bank scenario).
+
+    Parameters:
+    ----------
+    coeff_left_file (string): string with the full path to the csv file containing the polynomial coefficients for the
+                            left LCR
+    coeff_right_file (string): string with the full path to the csv file containing the polynomial coefficients for the
+                           right LCR
+    frequencies (list): frequencies of the onset models used to generate the LCRs that will be fit with the polynomial
+    azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
+                  the correct name)
+    """
     def __init__(self, coeff_left_file, coeff_right_file, frequencies, azimuth):
         self.coeff_left_file = coeff_left_file
         self.coeff_right_file = coeff_right_file
@@ -51,6 +51,10 @@ class DelayEstimation:
         return delay
     
     def estimate_delay(self):
+        """
+        Method that  estimates the delay between two sound signals based on the local polynomial approximation of their
+        corresponding LCRs. The method uses the class attributes and saves a csv file with the unique delays.
+        """
         # loading the files with the coefficients of the corresponding signals LCRs (in the canonical basis)
         coeff_left_file = self.coeff_left_file
         coeff_right_file = self.coeff_right_file
@@ -61,10 +65,6 @@ class DelayEstimation:
 
         coeff_left = np.genfromtxt(coeff_left_file, delimiter=',', skip_header=False)
         coeff_right = np.genfromtxt(coeff_right_file, delimiter=',', skip_header=False)
-
-        # testing: ignoring the first 30k samples due to window effect
-        #coeff_left = coeff_left[30000:, :]
-        #coeff_right = coeff_right[30000:, :]
 
         # some useful computations and parameters
         # window size for the 2nd degree polynomial approximation
