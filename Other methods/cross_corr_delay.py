@@ -4,6 +4,7 @@ Estimation of the ITD from the cross-correlation.
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, February 2020
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 

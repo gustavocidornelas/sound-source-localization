@@ -4,6 +4,7 @@ Estimation of the ITD from the sound onsets with a simple delay threshold. A rel
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, February 2020
 """
+
 import numpy as np
 
 if __name__ == '__main__':
