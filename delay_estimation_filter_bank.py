@@ -37,8 +37,7 @@ class DelayEstimationFilterBank:
         coeff_left = []
         coeff_right = []
         for i, freq in enumerate(frequencies):
-            print(freq)
-            coeff_left.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_left_Az_ ' +
+            coeff_left.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_left_Az_' +
                                             str(azimuth) + '_freq_' + str(freq) + '.csv',
                                             delimiter=',', skip_header=False))
             coeff_right.append(np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/coeff_right_Az_' +
@@ -76,13 +75,13 @@ class DelayEstimationFilterBank:
             decision = np.logical_and(first_condition, second_condition)
 
             # if the condition is satisfied for any frequency in the filter bank
-            if any(decision) and count > 1000:
+            if any(decision) and count > 300:
                 count = 0
                 # frequency to be used
                 freq_id = np.argmax(decision)
-                print('Frequency: ' + str(frequencies[freq_id]))
+                #print('Frequency: ' + str(frequencies[freq_id]))
 
-                print(k)
+                #print(k)
                 # approximating the 3rd degree polynomials by 2nd degree polynomials (coefficients beta) on a smaller window
                 beta_left = np.dot(A_inv, np.array([[coeff_left_k[0, freq_id]],
                                                     [coeff_left_k[0, freq_id] + coeff_left_k[1, freq_id] * a0 +
@@ -155,7 +154,44 @@ class DelayEstimationFilterBank:
 
 
 if __name__ == '__main__':
-    p = DelayEstimationFilterBank(frequencies=[[90.0], [100.0]], azimuth=90)
+    p = DelayEstimationFilterBank(frequencies=[[80.0], [140.0], [200.0], [260.0]], azimuth=-45)
     p.estimate_delay()
+
+    LCR_80 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
+                           'freq_[80.0].csv', delimiter=',')
+    LCR_80 = LCR_80[30000:, :]
+    LCR_140 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
+                           'freq_[140.0].csv', delimiter=',')
+    LCR_140 = LCR_140[30000:, :]
+    LCR_200 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
+                           'freq_[200.0].csv', delimiter=',')
+    LCR_200 = LCR_200[30000:, :]
+    LCR_260 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
+                           'freq_[260.0].csv', delimiter=',')
+    LCR_260 = LCR_260[30000:, :]
+
+    total_delays = np.load('teste_all_delays_Az_-45.npy')
+
+    fig, axs = plt.subplots(5)
+    axs[0].plot(np.asarray(range(LCR_80.shape[0])), LCR_80[:, 1])
+    axs[0].plot(np.asarray(range(LCR_80.shape[0])), LCR_80[:, 2])
+    axs[1].plot(np.asarray(range(LCR_80.shape[0])), LCR_140[:, 1])
+    axs[1].plot(np.asarray(range(LCR_80.shape[0])), LCR_140[:, 2])
+    axs[2].plot(np.asarray(range(LCR_80.shape[0])), LCR_200[:, 1])
+    axs[2].plot(np.asarray(range(LCR_80.shape[0])), LCR_200[:, 2])
+    axs[3].plot(np.asarray(range(LCR_80.shape[0])), LCR_260[:, 1])
+    axs[3].plot(np.asarray(range(LCR_80.shape[0])), LCR_260[:, 2])
+    axs[4].plot(np.asarray(range(total_delays.shape[0])), total_delays / 44.1)
+
+    # median filtering in the transitions
+    print('carai borracha: ' + str(np.median(np.unique(total_delays[208411:209029])) / 44.1))
+    print('carai borracha 2: ' + str(np.median(np.unique(total_delays[235790:235820])) / 44.1))
+
+    axs[0].set_title('80 Hz')
+    axs[1].set_title('140 Hz')
+    axs[2].set_title('200 Hz')
+    axs[3].set_title('260 Hz')
+    plt.show()
+
 
 
