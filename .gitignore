@@ -1,3 +1,9 @@
+# result and data files
+*.csv
+Female\ signal/
+ISTS\ Signal/
+Male\ signal/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
