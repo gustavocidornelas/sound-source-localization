@@ -135,7 +135,7 @@ class FitPoly:
                                                [1, 0, 0, 0]]))
 
         if index == 1:
-            np.savetxt('coeff_left_Az_ ' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', C_opt, delimiter=',')
+            np.savetxt('coeff_left_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', C_opt, delimiter=',')
         elif index == 2:
             np.savetxt('coeff_right_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', C_opt, delimiter=',')
 
