@@ -1,5 +1,6 @@
 # result and data files
 *.csv
+*.npy
 Female\ signal/
 ISTS\ Signal/
 Male\ signal/
