@@ -62,8 +62,8 @@ if __name__ == '__main__':
     count = 0
 
     # figure that continuously displays the results
-    fig_window = 1 * 44100
-    chunk = 4096
+    fig_window = int(0.5 * 44100)
+    chunk = 1024
     y_left = np.zeros(fig_window)
     y_right = np.zeros(fig_window)
     lcr_left = np.zeros(fig_window)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     delay_time_chunk = []
     fig, axs = plt.subplots(3)
     axs[0].set_ylabel('Audio signal')
-    axs[0].set_ylim(-0.16, 0.2)
+    axs[0].set_ylim(-0.15, 0.15)
     axs[1].set_ylabel('LCRs')
     axs[1].set_ylim(0, 0.0003)
     axs[2].set_ylabel('Delay [ms]')
@@ -91,6 +91,7 @@ if __name__ == '__main__':
     delay = 0
     # loop that goes through the audio signal
     for k in range(audio.shape[0]):
+
         # current audio sample
         y = audio[k, :]
 
@@ -129,33 +130,40 @@ if __name__ == '__main__':
             total_delays[k], count = delay_mod.estimate_delay(coeff_left_k=C_opt_L[k, :], coeff_right_k=C_opt_R[k, :],
                                                               count=count, delay=total_delays[k-1])
 
-        time_chunk.append(k)
-        y_left_chunk.append(y[0])
-        y_right_chunk.append(y[1])
-        lcr_left_chunk.append(LCR[k, 0])
-        lcr_right_chunk.append(LCR[k, 1])
-        delay_time_chunk.append(total_delays[k])
+        if k != 0:
+            time_chunk.append(k)
+            y_left_chunk.append(y[0])
+            y_right_chunk.append(y[1])
+            lcr_left_chunk.append(LCR[k, 0])
+            lcr_right_chunk.append(LCR[k, 1])
+            delay_time_chunk.append(total_delays[k])
 
         # preparing the plots
-        if k % chunk == 0:
-            time = np.hstack((time[chunk:], np.asarray(time_chunk)))
-            y_left = np.hstack((y_left[chunk:], np.asarray(y_left_chunk)))
-            y_right = np.hstack((y_right[chunk:], np.asarray(y_right_chunk)))
-            lcr_left = np.hstack((lcr_left[chunk:], np.asarray(lcr_left_chunk)))
-            lcr_right = np.hstack((lcr_right[chunk:], np.asarray(lcr_right_chunk)))
-            delay_time = np.hstack((delay_time[chunk:], np.asarray(delay_time_chunk)))
+        if k % chunk == 0 and k != 0:
+            time[:-chunk] = time[chunk:]
+            time[-chunk:] = time_chunk
+            y_left[:-chunk] = y_left[chunk:]
+            y_left[-chunk:] = y_left_chunk
+            y_right[:-chunk] = y_right[chunk:]
+            y_right[-chunk:] = y_right_chunk
+            lcr_left[:-chunk] = lcr_left[chunk:]
+            lcr_left[-chunk:] = lcr_left_chunk
+            lcr_right[:-chunk] = lcr_right[chunk:]
+            lcr_right[-chunk:] = lcr_right_chunk
+            delay_time[:-chunk] = delay_time[chunk:]
+            delay_time[-chunk:] = delay_time_chunk
 
             axs[0].set_xlim((max(time) - fig_window) / 44100, max(time) / 44100)
-            axs[0].plot(time[::30] / 44100, y_right[::30], 'b', label='Right')
-            axs[0].plot(time[::30] / 44100, y_left[::30], 'r', label='Left')
-            if k == 0:
-                axs[0].legend()
+            axs[0].plot(time[::32] / 44100, y_right[::32], 'b', label='Right')
+            axs[0].plot(time[::32] / 44100, y_left[::32], 'r', label='Left')
+            if k == chunk:
+                axs[0].legend(loc='upper right')
 
             axs[1].set_xlim((max(time) - fig_window) / 44100, max(time) / 44100)
-            axs[1].plot(time[::30] / 44100, lcr_left[::30], 'r')
-            axs[1].plot(time[::30] / 44100, lcr_right[::30], 'b')
+            axs[1].plot(time[::32] / 44100, lcr_left[::32], 'r')
+            axs[1].plot(time[::32] / 44100, lcr_right[::32], 'b')
             axs[2].set_xlim((max(time) - fig_window) / 44100, max(time) / 44100)
-            axs[2].plot(time[::30] / 44100, delay_time[::30] / 44.1, 'k')
+            axs[2].plot(time[::32] / 44100, delay_time[::32] / 44.1, 'k')
 
             time_chunk = []
             y_left_chunk = []
@@ -165,6 +173,4 @@ if __name__ == '__main__':
             delay_time_chunk = []
 
             plt.pause(0.05)
-
-
 
