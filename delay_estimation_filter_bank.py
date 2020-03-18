@@ -152,7 +152,7 @@ class DelayEstimationFilterBank:
 
             total_delay[k] = delay
 
-        np.save('celoko_teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
+        np.save('teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
         # print(np.unique(total_delay)/44.1)
         print(np.median(np.unique(total_delay) / 44.1))
         np.savetxt('unique_delays_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', np.unique(total_delay),
