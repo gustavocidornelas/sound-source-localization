@@ -67,6 +67,8 @@ class DelayEstimation:
         coeff_right = np.genfromtxt(coeff_right_file, delimiter=',', skip_header=False)
 
         # some useful computations and parameters
+        # number of samples in sequence used to do the continuous delay estimation
+        N = 50
         # window size for the 2nd degree polynomial approximation
         a0 = -40.0
         b0 = 40.0
@@ -79,18 +81,17 @@ class DelayEstimation:
         total_delay = np.zeros(coeff_left.shape[0])
         delay = 0
         count = 0
+        continuous_delay_status = 0  # used to check if it should perform continuous delay estimation or not
 
         # main loop, going through each sample coefficients
         for k in range(coeff_left.shape[0]):
-            count = count + 1
             # retrieving the current sample's coefficients
             coeff_left_k = coeff_left[k, :]
             coeff_right_k = coeff_right[k, :]
 
             # checking if it is a good sample to estimate the delay (both increasing signals)
             if (coeff_left_k[1] > 1e-6 and 2 * coeff_left_k[2] < 1e-13 and
-                coeff_right_k[1] > 1e-6 and 2 * coeff_right_k[2] < 1e-13 and count > 1000):
-                count = 0
+                coeff_right_k[1] > 1e-6 and 2 * coeff_right_k[2] < 1e-13 or continuous_delay_status == 1):
                 print(k)
                 # approximating the 3rd degree polynomials by 2nd degree polynomials (coefficients beta) on a smaller window
                 beta_left = np.dot(A_inv, np.array([[coeff_left_k[0]],
@@ -143,6 +144,18 @@ class DelayEstimation:
                         #count = 0
                     print(delay)
 
+                # setting the continuous delay estimation status to 1 if the first onset is detected and to 0 after the
+                # continuous delay estimation period
+                if count < N:
+                    continuous_delay_status = 1
+                    count = count + 1
+                elif count == N:
+                    continuous_delay_status = 0
+                    count = 0
+                    # computing the mean of the delays estimated during the continuous delay estimation period
+                    delay = np.mean(total_delay[k - N:k])
+                    total_delay[k-N:k] = np.median(total_delay[k-N:k])
+
             total_delay[k] = delay
 
         np.save('teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
@@ -161,7 +174,7 @@ class DelayEstimation:
 
 if __name__ == '__main__':
     p = DelayEstimation(coeff_left_file='/Users/gustavocidornelas/Desktop/sound-source/'
-                                        'coeff_left_Az_ -65_freq_[80.0].csv',
+                                        'coeff_left_Az_-65_freq_[80.0].csv',
                         coeff_right_file='/Users/gustavocidornelas/Desktop/sound-source/'
                                         'coeff_right_Az_-65_freq_[80.0].csv', frequencies=[80.0], azimuth=45)
     p.estimate_delay()

@@ -48,6 +48,8 @@ class DelayEstimationFilterBank:
         coeff_right = np.stack(coeff_right, axis=2)
 
         # some useful computations and parameters
+        # number of samples in sequence used to do the continuous delay estimation
+        N = 50
         # window size for the 2nd degree polynomial approximation
         a0 = -40.0
         b0 = 40.0
@@ -60,10 +62,10 @@ class DelayEstimationFilterBank:
         total_delay = np.zeros(coeff_left.shape[0])
         delay = 0
         count = 0
+        continuous_delay_status = 0  # used to check if it should perform continuous delay estimation or not
 
         # main loop, going through each sample coefficients
         for k in range(coeff_left.shape[0]):
-            count = count + 1
             # retrieving the current sample's coefficients
             coeff_left_k = coeff_left[k, :, :]
             coeff_right_k = coeff_right[k, :, :]
@@ -75,10 +77,10 @@ class DelayEstimationFilterBank:
             decision = np.logical_and(first_condition, second_condition)
 
             # if the condition is satisfied for any frequency in the filter bank
-            if any(decision) and count > 500:
-                count = 0
+            if any(decision) or continuous_delay_status == 1:
                 # frequency to be used
-                freq_id = np.argmax(decision)
+                if count == 0:
+                    freq_id = np.argmax(decision)
                 #print('Frequency: ' + str(frequencies[freq_id]))
 
                 #print(k)
@@ -136,10 +138,21 @@ class DelayEstimationFilterBank:
                             delay = roots[0]
                         # count = 0
                     print(delay)
+                # setting the continuous delay estimation status to 1 if the first onset is detected and to 0 after the
+                # continuous delay estimation period
+                if count < N:
+                    continuous_delay_status = 1
+                    count = count + 1
+                elif count == N:
+                    continuous_delay_status = 0
+                    count = 0
+                    # computing the mean of the delays estimated during the continuous delay estimation period
+                    delay = np.mean(total_delay[k - N:k])
+                    total_delay[k - N:k] = np.median(total_delay[k - N:k])
 
             total_delay[k] = delay
 
-        np.save('teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
+        np.save('celoko_teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
         # print(np.unique(total_delay)/44.1)
         print(np.median(np.unique(total_delay) / 44.1))
         np.savetxt('unique_delays_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', np.unique(total_delay),
@@ -154,20 +167,20 @@ class DelayEstimationFilterBank:
 
 
 if __name__ == '__main__':
-    p = DelayEstimationFilterBank(frequencies=[[80.0], [140.0], [200.0], [260.0]], azimuth=-45)
+    p = DelayEstimationFilterBank(frequencies=[[80.0], [115.0], [150.0], [185.0]], azimuth=-45)
     p.estimate_delay()
 
     LCR_80 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
                            'freq_[80.0].csv', delimiter=',')
     LCR_80 = LCR_80[30000:, :]
     LCR_140 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
-                           'freq_[140.0].csv', delimiter=',')
+                           'freq_[115.0].csv', delimiter=',')
     LCR_140 = LCR_140[30000:, :]
     LCR_200 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
-                           'freq_[200.0].csv', delimiter=',')
+                           'freq_[150.0].csv', delimiter=',')
     LCR_200 = LCR_200[30000:, :]
     LCR_260 = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_-45_'
-                           'freq_[260.0].csv', delimiter=',')
+                           'freq_[185.0].csv', delimiter=',')
     LCR_260 = LCR_260[30000:, :]
 
     total_delays = np.load('teste_all_delays_Az_-45.npy')
