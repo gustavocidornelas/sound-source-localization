@@ -17,11 +17,15 @@ class FitPoly:
     LCR_file (string): string with the full path to the csv file containing the LCRs
     azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
                   the correct name)
+    signal_id (string): identifier of the audio signal (used only to save the file with the correct name)
+    coeff_saving_path (string): full path indicating where the files with the polynomial coefficients should be saved
     """
-    def __init__(self, frequencies, LCR_file, azimuth):
+    def __init__(self, frequencies, LCR_file, azimuth, signal_id, coeff_saving_path):
         self.frequencies = frequencies
         self.LCR_file = LCR_file
         self.azimuth = azimuth
+        self.signal_id = signal_id
+        self.coeff_saving_path = coeff_saving_path
 
     def fit_polynomial(self, index):
         """
@@ -48,7 +52,7 @@ class FitPoly:
         # loading the LCR
         LCR = np.genfromtxt(LCR_file, delimiter=',')
         # getting rid of the first samples (due to window effect)
-        LCR = LCR[30000:, :]
+        LCR = LCR[4000:, :]
         LCR_L = LCR[:, index]  # LCR for the signal from the left
         LCR_R = LCR[:, 2]  # LCR for the signal from the right
         LCR = np.vstack((LCR_L, LCR_R))
@@ -135,15 +139,11 @@ class FitPoly:
                                                [1, 0, 0, 0]]))
 
         if index == 1:
-            np.savetxt('coeff_left_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', C_opt, delimiter=',')
+            np.savetxt(self.coeff_saving_path + '/' + self.signal_id + '_coeff_left_Az_' + str(azimuth) + '_freq_' +
+                       str(frequencies) + '.csv', C_opt, delimiter=',')
         elif index == 2:
-            np.savetxt('coeff_right_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', C_opt, delimiter=',')
+            np.savetxt(self.coeff_saving_path + '/' + self.signal_id + '_coeff_right_Az_' + str(azimuth) + '_freq_' +
+                       str(frequencies) + '.csv', C_opt, delimiter=',')
 
 
-if __name__ == '__main__':
-    p = FitPoly(frequencies=[80.0, 100.0],
-                LCR_file='/Users/gustavocidornelas/Desktop/sound-source/decaying_sinusoid_[0.99]_gamma_0.999_Az_90_freq'
-                         '_[80.0].csv',
-                index=1, azimuth=90)
-    p.fit_polynomial()
 

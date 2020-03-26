@@ -27,8 +27,11 @@ class ComputeLCR:
                   the correct name)
     onset_model (string): onset model used. Can be either 'decaying_sinusoid' or 'gammatone'
     window_model (string): window model used. Can be either 'exponential' or 'gamma'
+    signal_id (string): identifier of the audio signal (used only to save the file with the correct name)
+    lcr_saving_path (string): full path indicating where the LCR file should be saved
     """
-    def __init__(self, onset_model, window_model, frequencies, n_freq, onset_decays, window_decay, audio_file, azimuth):
+    def __init__(self, onset_model, window_model, frequencies, n_freq, onset_decays, window_decay, audio_file, azimuth,
+                 signal_id, lcr_saving_path):
         self.frequencies = frequencies
         self.n_freq = n_freq
         self.onset_decays = onset_decays
@@ -37,6 +40,8 @@ class ComputeLCR:
         self.azimuth = azimuth
         self.onset_model = onset_model
         self.window_model = window_model
+        self.signal_id = signal_id
+        self.lcr_saving_path = lcr_saving_path
 
     def compute_lcr(self):
         """
@@ -60,7 +65,8 @@ class ComputeLCR:
         assert len(f) == n_freq, 'Length of frequency list does not match the number of frequencies specified.'
 
         # loading the audio file
-        audio_data = np.genfromtxt(audio_file, delimiter=',')
+        # audio_data = np.genfromtxt(audio_file, delimiter=',')  # when the audio file is a .csv
+        audio_data = np.load(audio_file)  # when the audio file is a .npy
         y_L = audio_data[:, 0]  # signal from the microphone in the left
         y_R = audio_data[:, 1]  # signal from the microphone in the right
         y = audio_data[:, [0, 1]]  # multi-channel signal
@@ -180,18 +186,8 @@ class ComputeLCR:
 
         # saving the results
         final_LCR = np.hstack((LCR, LCR_L, LCR_R))
-        np.savetxt(
-            str(onset_model) + "_" + str(onset_decay) + "_" + str(window_model) + "_" + str(window_decay) + "_Az_" +
-            str(azimuth) + "_freq_" + str(f) + ".csv", final_LCR, delimiter=",",
-            header="Multi-channel, Left, Right")
-
-
-if __name__ == '__main__':
-    # example of usage
-    p = ComputeLCR(onset_model='decaying_sinusoid', window_model='gamma', frequencies=[80.0, 88.0], n_freq=2,
-                   onset_decays=[0.9, 0.9], window_decay=0.999,
-                   audio_file='/Users/gustavocidornelas/Desktop/sound-source/Male signal/Audio_signals/Male_Az_90.csv',
-                   azimuth=90)
-    p.compute_lcr()
+        np.savetxt(self.lcr_saving_path + "/" + self.signal_id + "_" + str(onset_model) + "_" + str(onset_decay) + "_"
+                   + str(window_model) + "_" + str(window_decay) + "_Az_" + str(azimuth) + "_freq_" + str(f) + ".csv",
+                   final_LCR, delimiter=",", header="Multi-channel, Left, Right")
 
 

@@ -21,12 +21,16 @@ class DelayEstimation:
     frequencies (list): frequencies of the onset models used to generate the LCRs that will be fit with the polynomial
     azimuth (float): float that represents the value of the azimuth of the sound source (used only to save the file with
                   the correct name)
+    signal_id (string): identifier of the audio signal (used only to save the file with the correct name)
+    delay_saving_path (string): full path indicating where the file with the delays should be saved
     """
-    def __init__(self, coeff_left_file, coeff_right_file, frequencies, azimuth):
+    def __init__(self, coeff_left_file, coeff_right_file, frequencies, azimuth, delay_saving_path, signal_id):
         self.coeff_left_file = coeff_left_file
         self.coeff_right_file = coeff_right_file
         self.frequencies = frequencies
         self.azimuth = azimuth
+        self.delay_saving_path = delay_saving_path
+        self.signal_id = signal_id
 
     def _get_delay(self, roots):
         """
@@ -158,11 +162,11 @@ class DelayEstimation:
 
             total_delay[k] = delay
 
-        np.save('teste_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
+        np.save(self.delay_saving_path + '/' + self.signal_id + '_all_delays_Az_' + str(azimuth) + '.npy', total_delay)
         #print(np.unique(total_delay)/44.1)
-        print(np.median(np.unique(total_delay)/44.1))
-        np.savetxt('unique_delays_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', np.unique(total_delay),
-                   delimiter=',')
+        #print(np.median(np.unique(total_delay)/44.1))
+        #np.savetxt('unique_delays_Az_' + str(azimuth) + '_freq_' + str(frequencies) + '.csv', np.unique(total_delay),
+        #           delimiter=',')
         #plt.figure()
         #plt.plot(np.asarray(range(total_delay.shape[0]))/44100, total_delay/44.1, linewidth=1.8)
         #plt.ylabel('ITD [ms]')
@@ -170,13 +174,4 @@ class DelayEstimation:
         #plt.grid(ls='--', c='.5')
 
         #plt.show()
-
-
-if __name__ == '__main__':
-    p = DelayEstimation(coeff_left_file='/Users/gustavocidornelas/Desktop/sound-source/'
-                                        'coeff_left_Az_-65_freq_[80.0].csv',
-                        coeff_right_file='/Users/gustavocidornelas/Desktop/sound-source/'
-                                        'coeff_right_Az_-65_freq_[80.0].csv', frequencies=[80.0], azimuth=45)
-    p.estimate_delay()
-
 
