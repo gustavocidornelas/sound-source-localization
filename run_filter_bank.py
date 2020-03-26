@@ -46,5 +46,5 @@ if __name__ == '__main__':
                 fit.fit_polynomial(index=i)
 
         # estimating the delay from the polynomial fit
-        delay = DelayEstimationFilterBank(frequencies=frequency, azimuth=az)
+        delay = DelayEstimationFilterBank(frequencies=filter_bank_frequencies, azimuth=az)
         delay.estimate_delay()
