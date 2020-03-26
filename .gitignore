@@ -4,6 +4,9 @@
 Female\ signal/
 ISTS\ Signal/
 Male\ signal/
+Dataset/
+Other\ methods/lmlib/
+TIMIT/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
