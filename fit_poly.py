@@ -52,7 +52,7 @@ class FitPoly:
         # loading the LCR
         LCR = np.genfromtxt(LCR_file, delimiter=',')
         # getting rid of the first samples (due to window effect)
-        LCR = LCR[4000:, :]
+        LCR = LCR[30000:, :]
         LCR_L = LCR[:, index]  # LCR for the signal from the left
         LCR_R = LCR[:, 2]  # LCR for the signal from the right
         LCR = np.vstack((LCR_L, LCR_R))

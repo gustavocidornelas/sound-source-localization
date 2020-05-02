@@ -67,9 +67,16 @@ class ComputeLCR:
         # loading the audio file
         # audio_data = np.genfromtxt(audio_file, delimiter=',')  # when the audio file is a .csv
         audio_data = np.load(audio_file)  # when the audio file is a .npy
+
         y_L = audio_data[:, 0]  # signal from the microphone in the left
         y_R = audio_data[:, 1]  # signal from the microphone in the right
+
         y = audio_data[:, [0, 1]]  # multi-channel signal
+
+        #plt.figure()
+        #plt.plot(np.asarray(range(y_L.shape[0])), y_L)
+        #plt.plot(np.asarray(range(y_L.shape[0])), y_R)
+        #plt.show()
 
         L = y.shape[0]  # number of samples
         M = y.shape[1]  # number of channels (one for the right and one for the left)

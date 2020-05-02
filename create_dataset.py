@@ -32,6 +32,20 @@ def convolve_hrir(azimuth, speech_signal):
     return np.vstack((speech_left, speech_right))
 
 
+def pad_speech(speech_signal):
+    """
+    Function that pads a random vector (white Gaussian noise) to the beginning of the speech signal
+    """
+    # computing the noise variance at the beginning of the speech signal
+    noise_var = np.var(speech_signal[:1000])
+
+    pad = np.random.normal(0, np.sqrt(noise_var), 30000)  # same length as the burn-in period for the LCR (these samples are thrown away later)
+
+    padded_speech_signal = np.hstack((pad, speech_signal))
+
+    return padded_speech_signal
+
+
 if __name__ == '__main__':
     # fixing the random number generator seed
     np.random.seed(33)
@@ -72,6 +86,9 @@ if __name__ == '__main__':
                                                  'DR' + str(region_number + 1) + '/' + female_speaker + '/' +
                                                  female_signal)
 
+                # padding the beginning of the signal with noise
+                speech_signal = pad_speech(speech_signal)
+
                 # convolving single channel signal with HRIR to obtain multi-channel signal
                 multi_channel_speech = np.transpose(convolve_hrir(azimuth=az, speech_signal=speech_signal))
 
@@ -97,6 +114,9 @@ if __name__ == '__main__':
                 fs, speech_signal = wavfile.read('/Users/gustavocidornelas/Desktop/sound-source/TIMIT/TRAIN/'
                                                  'DR' + str(region_number + 1) + '/' + male_speaker + '/' +
                                                  male_signal)
+
+                # padding the beginning of the signal with noise
+                speech_signal = pad_speech(speech_signal)
 
                 # convolving single channel signal with HRIR to obtain multi-channel signal
                 multi_channel_speech = np.transpose(convolve_hrir(azimuth=az, speech_signal=speech_signal))

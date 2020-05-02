@@ -21,11 +21,11 @@ if __name__ == '__main__':
     # window model considered. Either 'gamma' or 'exponential'
     window_model = 'gamma'
     # number of frequencies used simultaneously (linear combination)
-    n_freq = 3
+    n_freq = 1
     # list of frequencies used simultaneously
-    frequencies = [80.0, 160.0, 240.0]
+    frequencies = [80.0]
     # list of onset decays. Follows the same order as the list of frequencies
-    onset_decays = [0.99, 0.99, 0.99]
+    onset_decays = [0.99]
     # window decay used
     window_decay = 0.999
     # list of azimuths used
