@@ -18,16 +18,19 @@ if __name__ == '__main__':
     all_delays = []
     for az in azimuth:
         # reading the audio file
-        audio = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/ISTS Signal/HRIR/HRIR_Az_' +
-                              str(az) + '.csv',
-                              delimiter=',')
+        #audio = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/ISTS Signal/HRIR/HRIR_Az_' +
+        #                      str(az) + '.csv',
+        #                      delimiter=',')
+        audio = np.load('/Users/gustavocidornelas/Desktop/sound-source/Dataset/Az_' + str(az) + '/m_sig_7_az_' + str(az) +
+                                                                                               '.npy')
         # separating the signals from the left and from the right
         audio_L = audio[:, 0]
         audio_R = audio[:, 1]
         L = audio_L.shape[0]
 
         # calculating the cross-correlation between the two signals
-        fs = 44100.0
+        #fs = 44100.0
+        fs = 16000.0
         corr = signal.correlate(audio_L, audio_R, mode='same') / np.sqrt(signal.correlate(audio_R, audio_R,
                                                                                           mode='same')[int(L/2)] *
                                                                          signal.correlate(audio_L, audio_L,
