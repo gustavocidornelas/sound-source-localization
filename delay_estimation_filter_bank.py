@@ -81,7 +81,7 @@ class DelayEstimationFilterBank:
             coeff_right_k = coeff_right[k, :, :]
 
             # checking the conditions for each LCR polynomial
-            first_condition = np.logical_and(coeff_left_k[1, :] > 1.8e-6, coeff_right_k[1, :] > 1.8e-6)
+            first_condition = np.logical_and(coeff_left_k[1, :] > 1.2e-6, coeff_right_k[1, :] > 1.2e-6)
             second_condition = np.logical_and(2 * coeff_left_k[2, :] < 1e-13, 2 * coeff_right_k[2, :] < 1e-13)
             #third_condition = np.logical_and(coeff_left_k[0, :] > 9e-5, coeff_right_k[0, :] > 9e-5)
 
@@ -93,7 +93,7 @@ class DelayEstimationFilterBank:
 
             # if the condition is satisfied for any frequency in the filter bank
             if any(decision) or continuous_delay_status == 1:
-                if test_max <= 1000 and temp_block > 500:
+                if test_max < 1 and temp_block > 500:
 
                     # frequency to be used
                     if count == 0:
