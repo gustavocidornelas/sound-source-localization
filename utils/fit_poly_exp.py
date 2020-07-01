@@ -8,10 +8,13 @@ import matplotlib.pyplot as plt
 
 from window_models import *
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # loading the LCR
-    LCR = np.genfromtxt('/Users/gustavocidornelas/Desktop/sound-source/analysis/decaying_sinusoid_0.9_gamma_0.997_Az_'
-                          '90_freq_80.0.csv', delimiter=',')
+    LCR = np.genfromtxt(
+        "/Users/gustavocidornelas/Desktop/sound-source/analysis/decaying_sinusoid_0.9_gamma_0.997_Az_"
+        "90_freq_80.0.csv",
+        delimiter=",",
+    )
     # getting rid of the first 500 samples, due to window effect
     LCR = LCR[100000:, :]
     LCR_L = LCR[:, 1]  # LCR for the signal from the left
@@ -24,14 +27,8 @@ if __name__ == '__main__':
 
     # loading the 3rd degree polynomial model
     n_states = 4
-    A_poly = np.array([[1, 1, 0, 0],
-                       [0, 1, 1, 0],
-                       [0, 0, 1, 1],
-                       [0, 0, 0, 1]])
-    s_poly = np.array([[0],
-                       [0],
-                       [0],
-                       [1]])
+    A_poly = np.array([[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]])
+    s_poly = np.array([[0], [0], [0], [1]])
     # initializing the product of the state transition matrix and the initial state
     As = np.dot(A_poly, s_poly)
 
@@ -59,18 +56,27 @@ if __name__ == '__main__':
     # message passing loop
     for k in range(L):
         if k % 1000 == 0:
-            print('Signal sample ' + str(k) + '/' + str(L))
+            print("Signal sample " + str(k) + "/" + str(L))
 
         # current signal samples
         LCR_k = LCR[k, :].reshape(M, 1)
 
         # updating the messages
-        chi_k = np.dot(window.A, chi_k) + window.s * (np.power(LCR_k[0, 0], 2) + np.power(LCR_k[1, 0], 2))
-        temp_chi_k_L = np.dot(window.A, chi_k) + window.s * np.power(LCR_k[0, 0], 2)  # just for the left channel
-        temp_chi_k_R = np.dot(window.A, chi_k) + window.s * np.power(LCR_k[1, 0], 2)  # just for the right channel
-        zeta_k = np.dot(A_poly_window, zeta_k) + np.dot(s_poly_window, np.transpose(LCR_k))
-        s_k = np.linalg.multi_dot([A_poly_window, s_k, np.transpose(A_poly)]) + np.dot(s_poly_window,
-                                                                                       np.transpose(s_poly))
+        chi_k = np.dot(window.A, chi_k) + window.s * (
+            np.power(LCR_k[0, 0], 2) + np.power(LCR_k[1, 0], 2)
+        )
+        temp_chi_k_L = np.dot(window.A, chi_k) + window.s * np.power(
+            LCR_k[0, 0], 2
+        )  # just for the left channel
+        temp_chi_k_R = np.dot(window.A, chi_k) + window.s * np.power(
+            LCR_k[1, 0], 2
+        )  # just for the right channel
+        zeta_k = np.dot(A_poly_window, zeta_k) + np.dot(
+            s_poly_window, np.transpose(LCR_k)
+        )
+        s_k = np.linalg.multi_dot([A_poly_window, s_k, np.transpose(A_poly)]) + np.dot(
+            s_poly_window, np.transpose(s_poly)
+        )
         # transforming to normal messages
         k_k = np.dot(window.C, chi_k)
         temp_k_k_L = np.dot(window.C, temp_chi_k_L)  # just for the left channel
@@ -88,8 +94,16 @@ if __name__ == '__main__':
                 w_k[row, col_w] = np.trace(np.dot(np.kron(mask_w, window.C), s_k))
 
         # to avoid numerical instability
-        if abs(k_k) < 1e-16 or abs(k_k - np.trace(np.linalg.multi_dot([np.transpose(xi_k),
-                                                                       np.linalg.pinv(w_k), xi_k]))) < 1e-16:
+        if (
+            abs(k_k) < 1e-16
+            or abs(
+                k_k
+                - np.trace(
+                    np.linalg.multi_dot([np.transpose(xi_k), np.linalg.pinv(w_k), xi_k])
+                )
+            )
+            < 1e-16
+        ):
             k_k = k_k + 1e-10
 
         # determining the output matrix for the onset model
@@ -103,8 +117,8 @@ if __name__ == '__main__':
 
     # visualizing the results
     fig, axs = plt.subplots(2)
-    axs[0].plot(range(L), LCR_L, 'r')
-    axs[0].plot(range(L), LCR_R, 'b')
-    axs[1].plot(range(L), poly_fit[:, 0], 'r')
-    axs[1].plot(range(L), poly_fit[:, 1], 'b')
+    axs[0].plot(range(L), LCR_L, "r")
+    axs[0].plot(range(L), LCR_R, "b")
+    axs[1].plot(range(L), poly_fit[:, 0], "r")
+    axs[1].plot(range(L), poly_fit[:, 1], "b")
     plt.show()
