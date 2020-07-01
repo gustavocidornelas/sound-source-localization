@@ -1,6 +1,6 @@
 """
-Script that runs the algorithm using a linear combination of sound onset models with different frequencies on the
-dataset with speech signals (built over the TIMIT dataset). The parameters are defined at the beginning of the script.
+Script that runs the algorithm using a filter-bank of sound onset models with different frequencies on the
+dataset with speech signals (built over the TIMIT/GRID/ISTS dataset). The parameters are defined at the beginning of the script.
 
 ----------
 Author: Gustavo Cid Ornelas, ETH Zurich, March 2020
@@ -72,10 +72,10 @@ if __name__ == "__main__":
         pathlib.Path(azimuth_data_path + "/Coefficients").mkdir(
             parents=True, exist_ok=True
         )
-        pathlib.Path(azimuth_data_path + "/Delays").mkdir(parents=True, exist_ok=True)
+        pathlib.Path(azimuth_data_path + "/Delays - vanilla - linear combination").mkdir(parents=True, exist_ok=True)
         lcr_saving_path = azimuth_data_path + "/LCR"
         coeff_saving_path = azimuth_data_path + "/Coefficients"
-        delay_saving_path = azimuth_data_path + "/Delays"
+        delay_saving_path = azimuth_data_path + "/Delays - vanilla - linear combination"
 
         for signal in all_signals:
             # setting up all the paths and file names

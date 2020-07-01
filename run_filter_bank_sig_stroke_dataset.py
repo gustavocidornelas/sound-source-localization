@@ -1,10 +1,10 @@
 """
-Script that runs the algorithm using a linear combination of sound onset models with different frequencies on the
-dataset with different speech signals (built over the TIMIT dataset). The parameters are defined at the beginning of
+Script that runs the algorithm using a filter-bank of sound onset models with different frequencies on the
+dataset with different speech signals (built over the TIMIT/GRID/ISTS dataset). The parameters are defined at the beginning of
 the script.
 
 ----------
-Author: Gustavo Cid Ornelas, ETH Zurich, March 2020
+Author: Gustavo Cid Ornelas, ETH Zurich, July 2020
 """
 
 import os

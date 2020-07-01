@@ -1,6 +1,6 @@
 """
 Script that runs the algorithm using a linear combination of sound onset models with different frequencies on the
-dataset with different speech signals (built over the TIMIT dataset). The parameters are defined at the beginning of
+dataset with different speech signals (built over the TIMIT/GRID/ISTS dataset). The parameters are defined at the beginning of
 the script.
 
 ----------
@@ -82,10 +82,10 @@ if __name__ == "__main__":
         pathlib.Path(azimuth_data_path + "/Coefficients").mkdir(
             parents=True, exist_ok=True
         )
-        pathlib.Path(azimuth_data_path + "/Delays").mkdir(parents=True, exist_ok=True)
+        pathlib.Path(azimuth_data_path + "/Delays - vanilla - filter-bank").mkdir(parents=True, exist_ok=True)
         lcr_saving_path = azimuth_data_path + "/LCR"
         coeff_saving_path = azimuth_data_path + "/Coefficients"
-        delay_saving_path = azimuth_data_path + "/Delays"
+        delay_saving_path = azimuth_data_path + "/Delays - vanilla - filter-bank"
 
         # keeping track of the sample and frequency used for the delay estimation procedure
         delay_info = {}
