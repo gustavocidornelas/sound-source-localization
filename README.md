@@ -1,6 +1,6 @@
 # [OLD - PLEASE IGNORE FOR NOW]
 
-# Sound source localization via onset detection
+# Sound source localization via onset detectio
 
 The code for this project is organized in 3 separate directories, namely, `/onset-detection`, `/local-polynomial-fitting` and `/delay-estimation`. The code contained in each directory corresponds to the steps followed by the proposed algorithm to go from the raw multi-channel audio signal to the delay estimates.
 
