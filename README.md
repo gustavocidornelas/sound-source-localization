@@ -4,7 +4,7 @@
 ## About
 Humans can perform sound source localization in a seemingly effortless manner. To do so, one of the main cues we rely on is the interaural time difference (ITD), which is related to the perceived time delay between the versions of the audio signal received by the right and left ears. There are many computational methods that strive to estimate the ITD from binaural audio signals and this repository contains the code for an algorithm we propose based on fitting autonomous linear state space models (LSSM).
 
-This repository was developed as part of my master's thesis (Spring 2020) and semester project (Fall 2019) at the [Signal and Information Processing Laboratory (ISI)](https://isi.ee.ethz.ch/), at [ETH Zürich](https://www.ethz.ch/en.html). The full reports with the detailed description of our approach is avaliable [here](report_Gustavo_final.pdf).
+This repository was developed as part of my master's thesis (Spring 2020) and semester project (Fall 2019) at the [Signal and Information Processing Laboratory (ISI)](https://isi.ee.ethz.ch/), at [ETH Zürich](https://www.ethz.ch/en.html). The full reports with the detailed description of our approach is avaliable [here](#references).
 
 - [Requirements](#requirements)
 - [Project structure](#project-structure)
@@ -37,7 +37,7 @@ The `/other_methods` directory contains some of the implementation of the classi
 This directory is a complete mess. Sorry about that. It contains some of the code that I used to visualize some preliminary results and to debug my implementation. The code here is poorly documented and very inefficient, so I discourage you from using it.  
 
 ## References
-G. C. Ornelas, "Robust time delay estimation via onset detection filter bank", Master's thesis, ETH Zurich, Switzerland, 2020.
+G. C. Ornelas, ["Robust time delay estimation via onset detection filter bank"](msc_thesis.pdf), Master's thesis, ETH Zurich, Switzerland, 2020.
 
-G. C. Ornelas, "Sound source localization via onset detection", Semester thesis, ETH Zurich, Switzerland, 2019.
+G. C. Ornelas, ["Sound source localization via onset detection"](semester_project.pdf), Semester thesis, ETH Zurich, Switzerland, 2019.
  
