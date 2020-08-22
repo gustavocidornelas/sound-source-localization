@@ -38,5 +38,6 @@ This directory is a complete mess. Sorry about that. It contains some of the cod
 
 ## References
 G. C. Ornelas, "Robust time delay estimation via onset detection filter bank", Master's thesis, ETH Zurich, Switzerland, 2020.
+
 G. C. Ornelas, "Sound source localization via onset detection", Semester thesis, ETH Zurich, Switzerland, 2019.
  
