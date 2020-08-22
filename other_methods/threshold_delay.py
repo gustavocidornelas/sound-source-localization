@@ -88,7 +88,7 @@ if __name__ == "__main__":
         print("Azimuth " + str(az))
         # path to the data
         azimuth_data_path = (
-            "/Users/gustavocidornelas/Desktop/sound-source/mini-world/Dataset from ISTS/Az_"
+            "/Users/gustavocidornelas/Desktop/sound-source/data/new Dataset from ISTS/Az_"
             + str(az)
         )
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
         for i, signal in enumerate(all_signals):
             audio_signal = np.load(azimuth_data_path + "/" + signal)
-            all_delays[i] = estimate_delay_threshold(audio_signal, rel_thresh_dB=-10)
+            all_delays[i] = estimate_delay_threshold(audio_signal, rel_thresh_dB=-20)
 
         # save results
         np.save(

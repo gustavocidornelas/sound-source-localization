@@ -12,6 +12,7 @@ import pathlib
 import os
 
 from scipy import signal
+from matplotlib import rc
 
 
 def convert_to_compare(signal_id, frame_size, az, fs=44.1):
@@ -117,15 +118,18 @@ def estimate_delay_cross_corr_frame(audio, fs=44.1, frame_size=44100):
     delays_ours = delays_ours[: -num_zeros + 1]
 
     # plt.figure()
-    plt.plot(
-        range(len(delays_comp)),
-        abs(np.asarray(delays_comp)) * 1e3,
-        label="Cross-correlation",
-    )
-    # plt.plot(range(delays_ours.shape[0]), delays_ours / 44.1, 'r', label='Our method')
-    # #plt.plot(range(delays_ours.shape[0]), np.repeat(0.436, delays_ours.shape[0]),'--', label='Theoretical')
-    plt.legend()
-    plt.show()
+    # plt.plot(
+    #     range(len(delays_comp)),
+    #     abs(np.asarray(delays_comp)) * 1e3,
+    #     label="Cross-correlation with frames", linewidth=2.5
+    # )
+    # plt.plot(range(delays_ours.shape[0]), delays_ours / 44.1, 'r', label='Confidence version', linewidth=2.5)
+    # # #plt.plot(range(delays_ours.shape[0]), np.repeat(0.436, delays_ours.shape[0]),'--', label='Theoretical')
+    # plt.xlabel('k', fontsize=24)
+    # plt.ylabel('ITD [msec]', fontsize=24)
+    #
+    # plt.legend(fontsize=24)
+    # plt.show()
 
     # return abs(delay) * 1e3
     return (
@@ -134,6 +138,11 @@ def estimate_delay_cross_corr_frame(audio, fs=44.1, frame_size=44100):
 
 
 if __name__ == "__main__":
+
+    rc('text', usetex=True)
+    rc('xtick', labelsize=24)
+    rc('ytick', labelsize=24)
+
     # azimuth list
     azimuth = [
         -80,
@@ -160,13 +169,14 @@ if __name__ == "__main__":
         65,
         80,
     ]
+    azimuth =[-55]
     frame = 100
 
     for az in azimuth:
         print("Azimuth " + str(az))
         # path to the data
         azimuth_data_path = (
-            "/Users/gustavocidornelas/Desktop/sound-source/mini-world/Dataset from ISTS/Az_"
+            "/Users/gustavocidornelas/Desktop/sound-source/data/new Dataset from ISTS/Az_"
             + str(az)
         )
 
